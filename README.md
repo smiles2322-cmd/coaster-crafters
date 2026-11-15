@@ -4,4 +4,4 @@ A 3D roller coaster builder by Smiles 2322. Build a coaster one piece at a time,
 
 Play: https://smiles2322-cmd.github.io/coaster-crafters/
 
-The site is stored as site.tgz.b64. The Publish workflow unpacks it to the gh-pages branch.
+The site is stored as base64 pieces in site/ (cat site/part-* | base64 -d | tar -xz). The Publish workflow unpacks it to the gh-pages branch.
