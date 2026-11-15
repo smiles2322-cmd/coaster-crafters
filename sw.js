@@ -1,0 +1,14 @@
+// Offline cache for Coaster Crafters. Relative paths so it works under any sub-folder.
+const CACHE = 'coaster-crafters-v3';
+const ASSETS = ['./', './index.html', './style.css', './js/game.js', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './tex/gravel_color.jpg', './tex/gravel_normal.jpg', './tex/concrete_color.jpg', './tex/concrete_normal.jpg',
+  // models, materials and sky used on every quality level (High-only extras are cached the first time they load)
+  './js/basis/basis_transcoder.js', './js/basis/basis_transcoder.wasm', './assets/sky/kloppenheim_06_puresky_1k.hdr', './assets/mat/gravel-shoulder-color-1k.ktx2', './assets/mat/gravel-shoulder-normal-1k.ktx2', './assets/mat/gravel-shoulder-orm-1k.ktx2', './assets/mat/meadow-ground-color-1k.ktx2', './assets/mat/meadow-ground-normal-1k.ktx2', './assets/mat/meadow-ground-orm-1k.ktx2', './assets/mat/worn-concrete-color-1k.ktx2', './assets/mat/worn-concrete-normal-1k.ktx2', './assets/mat/worn-concrete-orm-1k.ktx2', './assets/models/blue-hydrangea_l1.glb', './assets/models/casual-walker_l2.glb', './assets/models/clipped-hedge-straight_l1.glb', './assets/models/coaster-loading-station_l1.glb', './assets/models/coaster-train_l1.glb', './assets/models/cyclist_l2.glb', './assets/models/dog-walker_l2.glb', './assets/models/european-beech_l2.glb', './assets/models/granite-boulder_l2.glb', './assets/models/grey-alder_l2.glb', './assets/models/hiker_l2.glb', './assets/models/lavender-clump_l1.glb', './assets/models/limestone-boulder-medium_l2.glb', './assets/models/marigold-edging-row_l1.glb', './assets/models/marigold-edging-row_l2.glb', './assets/models/mountain-ridge_l1.glb', './assets/models/norway-spruce_l2.glb', './assets/models/park-bench_l1.glb', './assets/models/red-rose-bush_l1.glb', './assets/models/red-rose-bush_l2.glb', './assets/models/silver-birch_l2.glb', './assets/models/street-lamp_l1.glb', './assets/models/sugar-maple_l2.glb', './assets/models/tulip-cluster_l1.glb', './assets/models/waste-bin_l1.glb'];
+self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())); });
+self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });
+self.addEventListener('fetch', (e) => {
+  if (e.request.method !== 'GET') return;
+  e.respondWith(caches.match(e.request, { ignoreSearch: true }).then(hit => hit || fetch(e.request).then(res => {
+    if (res.ok && new URL(e.request.url).origin === location.origin) { const copy = res.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
+    return res;
+  }).catch(() => caches.match('./index.html'))));
+});

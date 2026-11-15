@@ -1,0 +1,17 @@
+{
+  "name": "Coaster Crafters",
+  "short_name": "Coaster Crafters",
+  "description": "Build a 3D roller coaster one piece at a time, pass the safety test, open it to riders, and chase the high score. By Smiles 2322.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#a9dcff",
+  "theme_color": "#7c3aed",
+  "categories": ["games", "entertainment"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

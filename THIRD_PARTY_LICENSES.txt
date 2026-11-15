@@ -1,0 +1,57 @@
+Three.js (https://threejs.org), bundled in js/game.js, is used under the MIT License:
+
+The MIT License
+
+Copyright © 2010-2026 three.js authors
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------
+Textures in tex/ come from ambientCG (https://ambientcg.com), released under
+CC0 1.0 Universal (public domain). Resized to 512 px. Shown only for the first
+second while the full materials load.
+  gravel_color.jpg, gravel_normal.jpg      Gravel022  https://ambientcg.com/view?id=Gravel022
+  concrete_color.jpg, concrete_normal.jpg  Concrete034 https://ambientcg.com/view?id=Concrete034
+
+------------------------------------------------------------
+Sky and image-based lighting (assets/sky/):
+  kloppenheim_06_puresky_1k.hdr, kloppenheim_06_puresky_2k.hdr
+  "Kloppenheim 06 (Pure Sky)" by Greg Zaal, sky edits by Jarod Guest, Poly Haven
+  https://polyhaven.com/a/kloppenheim_06_puresky
+  License: CC0 1.0 Universal (public domain). https://polyhaven.com/license
+
+------------------------------------------------------------
+3D models (assets/models/, assets/hd/) and PBR ground materials (assets/mat/)
+come from tevy (https://tevy.dev). Every tevy asset is released under
+CC0 1.0 Universal (public domain): https://creativecommons.org/publicdomain/zero/1.0/
+Files are the unmodified tevy downloads (meshopt geometry, KTX2 textures).
+  Trees:   european-beech, sugar-maple, silver-birch, grey-alder, norway-spruce
+           https://tevy.dev/models/<name>
+  People:  casual-walker, dog-walker, hiker, cyclist (rigged, idle/walk/wave/look_around)
+  Ride:    coaster-train, coaster-loading-station
+  Park:    park-bench, street-lamp, waste-bin, clipped-hedge-straight
+  Plants:  red-rose-bush, marigold-edging-row, lavender-clump, tulip-cluster, blue-hydrangea
+  Rocks:   granite-boulder, limestone-boulder-medium
+  Terrain: mountain-ridge
+  Materials: meadow-ground, gravel-shoulder, worn-concrete
+           https://tevy.dev/materials/<name>
+
+The KTX2 transcoder in js/basis/ is part of three.js (Basis Universal,
+Apache License 2.0, https://github.com/BinomialLLC/basis_universal).
+Grass blades, steel track, supports and the station sign are generated in code.

@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#7c3aed">
+<meta name="description" content="Coaster Crafters by Smiles 2322: build a 3D roller coaster one piece at a time, pass the safety test, open it to riders, and chase the high score.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Coaster Crafters">
+<title>Coaster Crafters</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div id="loading" class="loading" role="status">Loading Coaster Crafters…</div>
+<div id="nogl" class="modal" hidden role="alert"><div class="card"><h2>Oh no!</h2><p>This device can't show 3D graphics right now. Try another browser, or turn on hardware acceleration.</p></div></div>
+<div id="live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+<header id="topbar" hidden>
+  <button id="b-home" class="chip" aria-label="Main menu">☰<span class="sr-only"> Menu</span></button>
+  <div class="tb-title"><span class="brandmini">Smiles 2322</span><span id="tb-name">Coaster Crafters</span></div>
+  <div id="budget" class="chip money" aria-label="Budget">$15,000</div>
+</header>
+
+<main id="ui">
+  <section id="scr-title" class="screen title" aria-labelledby="t-title" hidden>
+    <p class="brand">Smiles 2322 presents</p>
+    <h1 id="t-title"><span>Coaster</span> Crafters</h1>
+    <p class="tag">Build it. Test it. Open it. Hear what riders think!</p>
+    <div class="stack">
+      <button id="b-build" class="btn big primary">Start Building</button>
+      <button id="b-scores" class="btn">Scoreboard</button>
+      <button id="b-howto" class="btn">How to Play</button>
+      <button id="b-settings" class="btn">Settings</button>
+    </div>
+  </section>
+
+  <section id="build-ui" aria-label="Builder" hidden>
+    <h2 class="sr-only">Build your coaster</h2>
+    <div id="status" class="status" aria-live="off"></div>
+    <div class="tools" role="toolbar" aria-label="Build tools">
+      <button id="b-undo" class="tool">↶ Undo</button>
+      <button id="b-del" class="tool">⌫ Delete last</button>
+      <button id="b-view" class="tool">◎ Center view</button>
+      <button id="b-saves" class="tool">💾 Save / Load</button>
+      <button id="b-clear" class="tool">🗑 Clear</button>
+    </div>
+    <div id="palette" role="toolbar" aria-label="Track pieces"></div>
+    <button id="b-test" class="btn primary testbtn">▶ Test Run</button>
+  </section>
+
+  <section id="run-ui" aria-label="Test run" hidden>
+    <div class="runbar">
+      <div id="run-title" class="pill">Inspection test run</div>
+      <div class="runstats"><span id="rs-speed">0 mph</span><span id="rs-g">1.0 G</span></div>
+    </div>
+    <div class="runbtns">
+      <button id="b-ride" class="tool" aria-pressed="false">🎢 Ride view</button>
+      <button id="b-fast" class="tool" aria-pressed="false">⏩ Faster</button>
+      <button id="b-skip" class="tool">⏭ Skip</button>
+    </div>
+  </section>
+
+  <section id="park-ui" aria-label="Open park" hidden>
+    <div class="parkbar">
+      <div class="pstat"><b id="pk-riders">0</b><span>riders</span></div>
+      <div class="pstat"><b id="pk-avg">-</b><span>avg stars</span></div>
+      <div class="pstat"><b id="pk-earn">$0</b><span>earned</span></div>
+      <div class="pstat"><b id="pk-trains">0/0</b><span>trains</span></div>
+    </div>
+    <div class="clock" aria-hidden="true"><div id="pk-clock"></div></div>
+    <ol id="feed" class="feed" aria-label="Rider reviews" tabindex="0"></ol>
+    <div class="runbtns">
+      <button id="b-pride" class="tool" aria-pressed="false">🎢 Ride view</button>
+      <button id="b-pfast" class="tool" aria-pressed="false">⏩ Faster</button>
+      <button id="b-endday" class="tool">🌙 End day</button>
+    </div>
+  </section>
+</main>
+
+<div id="results" class="modal" role="dialog" aria-modal="true" aria-labelledby="res-title" hidden>
+  <div class="card">
+    <p id="res-badge" class="badge"></p>
+    <h2 id="res-title" tabindex="-1"></h2>
+    <p id="res-reason" class="reason"></p>
+    <dl id="res-stats" class="stats"></dl>
+    <div id="res-ratings" class="ratings"></div>
+    <div class="row">
+      <button id="b-open" class="btn primary">🎟 Open for Business</button>
+      <button id="b-again" class="btn">↻ Watch again</button>
+      <button id="b-keep" class="btn">🔧 Keep Building</button>
+    </div>
+  </div>
+</div>
+
+<div id="dayend" class="modal" role="dialog" aria-modal="true" aria-labelledby="de-title" hidden>
+  <div class="card">
+    <h2 id="de-title" tabindex="-1">Park closed for the day!</h2>
+    <dl id="de-stats" class="stats"></dl>
+    <p class="bigscore">Coaster Score <b id="de-score">0</b></p>
+    <form id="de-form">
+      <label for="de-player">Your name</label>
+      <input id="de-player" maxlength="16" autocomplete="nickname" required>
+      <label for="de-coaster">Coaster name</label>
+      <input id="de-coaster" maxlength="28" required>
+      <div class="row"><button class="btn primary" type="submit">🏆 Post my score</button><button id="de-skip" type="button" class="btn">Not now</button></div>
+    </form>
+  </div>
+</div>
+
+<div id="scoreboard" class="modal" role="dialog" aria-modal="true" aria-labelledby="sb-title" hidden>
+  <div class="card wide">
+    <h2 id="sb-title" tabindex="-1">🏆 Scoreboard</h2>
+    <div class="tabs" role="tablist" aria-label="Boards">
+      <button role="tab" id="tab-score" aria-controls="sb-panel" aria-selected="true" data-board="score">Best Score</button>
+      <button role="tab" id="tab-rating" aria-controls="sb-panel" aria-selected="false" data-board="rating" tabindex="-1">Top Rated</button>
+      <button role="tab" id="tab-riders" aria-controls="sb-panel" aria-selected="false" data-board="riders" tabindex="-1">Most Riders</button>
+    </div>
+    <div id="sb-panel" role="tabpanel" aria-labelledby="tab-score"></div>
+    <p class="note">Scores are saved on this device.</p>
+    <div class="row"><button class="btn primary" data-close>Close</button></div>
+  </div>
+</div>
+
+<div id="saves" class="modal" role="dialog" aria-modal="true" aria-labelledby="sv-title" hidden>
+  <div class="card wide">
+    <h2 id="sv-title" tabindex="-1">💾 Save / Load</h2>
+    <ul id="sv-list" class="slots"></ul>
+    <h3>Example coasters</h3>
+    <div class="row"><button class="btn" data-example="starter">Load "Sunny Starter"</button><button class="btn" data-example="twister">Load "Rainbow Twister"</button></div>
+    <div class="row"><button class="btn primary" data-close>Close</button></div>
+  </div>
+</div>
+
+<div id="settings" class="modal" role="dialog" aria-modal="true" aria-labelledby="st-title" hidden>
+  <div class="card">
+    <h2 id="st-title" tabindex="-1">⚙️ Settings</h2>
+    <label class="toggle"><input type="checkbox" id="opt-sound" checked> Sound effects</label>
+    <label class="toggle"><input type="checkbox" id="opt-haptics" checked> Vibration (where supported)</label>
+    <label class="toggle"><input type="checkbox" id="opt-large"> Large text</label>
+    <label class="toggle"><input type="checkbox" id="opt-reduce"> Reduce motion</label>
+    <label class="toggle"><input type="checkbox" id="opt-dof"> Depth of field, photo look (High quality only)</label>
+    <label class="field" for="opt-quality">Graphics quality</label>
+    <select id="opt-quality" class="select"><option value="auto">Auto</option><option value="low">Low (fastest)</option><option value="medium">Medium</option><option value="high">High (shadows, glow and soft shading)</option></select>
+    <label class="field" for="opt-paint">Track paint</label>
+    <select id="opt-paint" class="select"><option value="candy">Candy Pink and Teal</option><option value="red">Classic Red</option><option value="blue">Royal Blue and Gold</option><option value="midnight">Midnight and Orange</option><option value="mint">Mint and White</option></select>
+    <div class="row"><button id="b-resetscores" class="btn">Clear scoreboard</button><button class="btn primary" data-close>Done</button></div>
+  </div>
+</div>
+
+<div id="tutorial" class="modal" role="dialog" aria-modal="true" aria-labelledby="tu-title" hidden>
+  <div class="card">
+    <p id="tu-step" class="badge"></p>
+    <h2 id="tu-title" tabindex="-1"></h2>
+    <p id="tu-text"></p>
+    <div class="row"><button id="tu-back" class="btn">Back</button><button id="tu-next" class="btn primary">Next</button><button id="tu-skip" class="btn">Skip</button></div>
+  </div>
+</div>
+
+<div id="confirm" class="modal" role="alertdialog" aria-modal="true" aria-labelledby="cf-title" hidden>
+  <div class="card"><h2 id="cf-title" tabindex="-1"></h2><div class="row"><button id="cf-yes" class="btn primary">Yes</button><button id="cf-no" class="btn">No</button></div></div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script src="js/game.js"></script>
+</body>
+</html>
