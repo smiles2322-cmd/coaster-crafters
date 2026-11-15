@@ -1,2 +1,7 @@
-# coaster-crafters
-Coaster Crafters: a 3D roller coaster builder by Smiles 2322.
+# Coaster Crafters
+
+A 3D roller coaster builder by Smiles 2322. Build a coaster one piece at a time, pass the safety test run, open it to riders, and post your high score.
+
+Play: https://smiles2322-cmd.github.io/coaster-crafters/
+
+The site is stored as site.tgz.b64. The Publish workflow unpacks it to the gh-pages branch.
